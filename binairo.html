@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="classic">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jouez a Binairo / Takuzu dans votre navigateur : modes Arcade, Zen, Chrono et feuilles A4 a imprimer. Jeu HTML autonome, responsive et multilingue.">
+    <meta name="theme-color" content="#8b6f47">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Binairo">
+    <meta property="og:title" content="BINAIRO / TAKUZU">
+    <meta property="og:description" content="Un jeu Binairo / Takuzu autonome, responsive, multilingue et pret a imprimer.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="preview.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BINAIRO / TAKUZU">
+    <meta name="twitter:description" content="Jouez a Binairo / Takuzu dans votre navigateur, sur PC et mobile.">
+    <meta name="twitter:image" content="preview.png">
+    <title>BINAIRO / TAKUZU</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>1</text></svg>">
+    <style>
+        :root, [data-theme="classic"] {
+            --bg-grad-1: #f4ecd8;
+            --bg-grad-2: #e0d4bc;
+            --bg-texture: radial-gradient(rgba(139, 111, 71, 0.15) 1.5px, transparent 1.5px);
+            --bg-size: 25px 25px;
+            --text-main: #8b6f47;
+            --text-light: #999;
+            --screen-bg: rgba(255, 255, 255, 0.85);
+            --btn-border: #8b6f47;
+            --btn-hover-bg: #8b6f47;
+            --btn-hover-text: white;
+            --grid-border: #333;
+            --cell-bg: white;
+            --cell-border: #ccc;
+            --cell-fixed-bg: #f5f5f5;
+            --cell-validated-color: #5a8b5a;
+            --cell-success-bg: #e8f5e9;
+            --cell-revealed-bg: #fff8e1;
+            --cell-revealed-color: #d4a855;
+            --cell-error-bg: #ffcccc;
+            --cell-conflict-color: #ff6b6b;
+            --mode-arcade: #4169E1;
+            --mode-zen: #7CB342;
+            --mode-chrono: #E53935;
+            --print-color: #9b59b6;
+            --tooltip-bg: #2c2c2c;
+            --tooltip-color: white;
+            --heart-color: #d4738a;
+        }
+
+        [data-theme="sakura"] {
+            --bg-grad-1: #fff0f5;
+            --bg-grad-2: #f8bbd0;
+            --bg-texture: radial-gradient(rgba(136, 14, 79, 0.12) 1.5px, transparent 1.5px);
+            --text-main: #880e4f;
+            --btn-border: #880e4f;
+            --btn-hover-bg: #880e4f;
+            --grid-border: #4a0024;
+            --cell-fixed-bg: #fce4ec;
+            --heart-color: #e91e63;
+            --mode-arcade: #1565c0;
+            --mode-zen: #2e7d32;
+            --mode-chrono: #c62828;
+            --print-color: #6a1b9a;
+        }
+
+        [data-theme="matcha"] {
+            --bg-grad-1: #f1f8e9;
+            --bg-grad-2: #c5e1a5;
+            --bg-texture: radial-gradient(rgba(51, 105, 30, 0.12) 1.5px, transparent 1.5px);
+            --text-main: #33691e;
+            --btn-border: #33691e;
+            --btn-hover-bg: #33691e;
+            --grid-border: #1b5e20;
+            --cell-fixed-bg: #e8f5e9;
+            --heart-color: #e57373;
+            --mode-arcade: #1976d2;
+            --mode-zen: #388e3c;
+            --mode-chrono: #d32f2f;
+            --print-color: #7b1fa2;
+        }
+
+        [data-theme="fuji"] {
+            --bg-grad-1: #e3f2fd;
+            --bg-grad-2: #90caf9;
+            --bg-texture: radial-gradient(rgba(13, 71, 161, 0.12) 1.5px, transparent 1.5px);
+            --text-main: #0d47a1;
+            --btn-border: #0d47a1;
+            --btn-hover-bg: #0d47a1;
+            --grid-border: #01579b;
+            --cell-fixed-bg: #e1f5fe;
+            --heart-color: #ef5350;
+            --mode-arcade: #0277bd;
+            --mode-zen: #2e7d32;
+            --mode-chrono: #c62828;
+            --print-color: #4527a0;
+        }
+
+        [data-theme="dark"] {
+            --bg-grad-1: #252525;
+            --bg-grad-2: #151515;
+            --bg-texture: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            --bg-size: 30px 30px;
+            --text-main: #d4a855;
+            --screen-bg: rgba(40, 40, 40, 0.85);
+            --btn-border: #d4a855;
+            --btn-hover-bg: #d4a855;
+            --btn-hover-text: #1a1a1a;
+            --grid-border: #888;
+            --cell-bg: #2a2a2a;
+            --cell-border: #444;
+            --cell-fixed-bg: #3a3a3a;
+            --cell-validated-color: #7ab87a;
+            --cell-success-bg: #2a3b2a;
+            --cell-revealed-bg: #4a4020;
+            --cell-revealed-color: #f4c842;
+            --cell-error-bg: #5a2a2a;
+            --cell-conflict-color: #ff8888;
+            --mode-arcade: #6495ED;
+            --mode-zen: #9CCC65;
+            --mode-chrono: #FF5252;
+            --print-color: #d8b4e2;
+            --tooltip-bg: #d4a855;
+            --tooltip-color: #1a1a1a;
+            --heart-color: #e48a9a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Georgia, serif;
+            background-color: var(--bg-grad-1);
+            background-image: var(--bg-texture), linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
+            background-size: var(--bg-size), 100% 100%;
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+        .container { max-width: 1000px; width: 100%; position: relative; z-index: 10; }
+        .site-footer {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            width: max-content;
+            max-width: min(100%, 1000px);
+            margin-top: 16px;
+            padding: 9px 16px;
+            border-radius: 999px;
+            background: rgba(9, 13, 22, 0.78);
+            color: rgba(245, 247, 255, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 0.92rem;
+            line-height: 1.25;
+        }
+        .site-footer a { color: #d7c8ff; text-decoration: none; font-weight: 700; }
+        .site-footer a:hover, .site-footer a:focus-visible { text-decoration: underline; }
+        .site-footer .footer-sep { color: rgba(245, 247, 255, 0.45); }
+        .footer-support { display: inline-flex; align-items: center; gap: 0.28rem; color: #f5d987 !important; }
+        .footer-support strong { color: #ffe68d; font-weight: 800; }
+        .footer-strike { color: #e7c0a0; text-decoration-line: line-through; text-decoration-color: #d76a7d; text-decoration-thickness: 0.14em; }
+        .footer-cup { width: 1.05em; height: 1.05em; color: #d9b963; flex: 0 0 auto; stroke-width: 1.9; }
+        .screen {
+            display: none !important;
+            background: var(--screen-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+        }
+        .screen.active { display: flex !important; }
+        .flex-col-center { display: flex; flex-direction: column; align-items: center; }
+        h1, h2, h3, p { text-align: center; font-weight: 300; }
+        h1 { font-size: 4em; letter-spacing: 0.2em; margin-bottom: 5px; }
+        h2 { font-size: 1.5em; letter-spacing: 0.3em; margin-bottom: 30px; }
+        .small-title h1 { font-size: 2.5em; margin-bottom: 5px; }
+        .small-title h2 { font-size: 1em; margin-bottom: 20px; }
+        .menu-section { margin-bottom: 30px; width: 100%; text-align: center; }
+        .menu-section p { font-size: 1.1em; margin-bottom: 10px; font-weight: bold; }
+        .mode-desc { font-size: 0.9em; color: var(--text-light); margin-top: 10px; min-height: 20px; font-style: italic; }
+        .rules-section { width: min(640px, 100%); margin-top: 20px; padding: 20px; border-radius: 15px; background: rgba(255,255,255,0.45); }
+        [data-theme="dark"] .rules-section { background: rgba(60,60,60,0.45); }
+        .rules-section h3 { margin-bottom: 12px; font-size: 1.2em; }
+        .rules-section ul { padding-left: 22px; line-height: 1.6; color: var(--text-main); }
+        .rules-section li { margin-bottom: 6px; }
+
+        .btn {
+            padding: 12px 25px;
+            font-size: 0.9em;
+            border: 2px solid var(--btn-border);
+            background: transparent;
+            color: var(--text-main);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: Georgia, serif;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin: 5px;
+            touch-action: manipulation;
+        }
+        .btn:hover, .btn.selected { background: var(--btn-hover-bg); color: var(--btn-hover-text); }
+        .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+        .btn-main { padding: 15px 40px; font-size: 1.2em; font-weight: bold; background: var(--btn-hover-bg); color: var(--btn-hover-text); border: none; }
+        .btn-resume { background-color: var(--cell-revealed-color); color: white; border-color: var(--cell-revealed-color); margin-top: 12px; }
+        .btn-resume:hover { background-color: var(--text-main); border-color: var(--text-main); }
+        .btn-danger { border-color: var(--heart-color); color: var(--heart-color); }
+        .btn-mode[data-mode="arcade"] { border-color: var(--mode-arcade); color: var(--mode-arcade); }
+        .btn-mode[data-mode="arcade"].selected { background: var(--mode-arcade); color: #fff; }
+        .btn-mode[data-mode="zen"] { border-color: var(--mode-zen); color: var(--mode-zen); }
+        .btn-mode[data-mode="zen"].selected { background: var(--mode-zen); color: #fff; }
+        .btn-mode[data-mode="chrono"] { border-color: var(--mode-chrono); color: var(--mode-chrono); }
+        .btn-mode[data-mode="chrono"].selected { background: var(--mode-chrono); color: #fff; }
+        .btn-mode[data-mode="print"] { border-color: var(--print-color); color: var(--print-color); }
+        .btn-mode[data-mode="print"].selected { background: var(--print-color); color: #fff; }
+        .controls-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; align-items: center; }
+        .top-toggles { position: fixed; top: 20px; right: 20px; display: flex; gap: 12px; z-index: 1000; align-items: center; }
+        .toggle-btn, .lang-btn {
+            width: 45px; min-width: 45px; height: 45px; border-radius: 50%;
+            border: 2px solid var(--btn-border); background: var(--cell-bg); color: var(--text-main);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s, box-shadow 0.2s, background 0.2s; font-family: Georgia, serif;
+            padding: 0; touch-action: manipulation;
+        }
+        .toggle-btn:hover, .lang-btn:hover { transform: scale(1.08); }
+        .toggle-btn:focus-visible, .lang-btn:focus-visible, .btn:focus-visible, .num-btn:focus-visible, .cell:focus-visible {
+            outline: 3px solid var(--cell-revealed-color); outline-offset: 3px;
+        }
+        .icon-slot, .icon-svg { width: 24px; height: 24px; display: block; }
+        .icon-svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .lang-picker { position: relative; }
+        .lang-btn { gap: 0; }
+        .lang-menu {
+            position: absolute; top: calc(100% + 10px); right: 0; display: none;
+            grid-template-columns: repeat(3, 42px); gap: 8px; padding: 10px;
+            border: 2px solid var(--btn-border); border-radius: 16px;
+            background: var(--screen-bg); box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+        .lang-picker.open .lang-menu { display: grid; }
+        .lang-option {
+            width: 42px; height: 34px; border-radius: 10px; border: 1px solid var(--cell-border);
+            background: var(--cell-bg); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; padding: 0; transition: transform 0.18s, border-color 0.18s, background 0.18s;
+        }
+        .lang-option:hover, .lang-option.selected { transform: translateY(-1px); border-color: var(--btn-border); background: var(--cell-revealed-bg); }
+        .lang-option:focus-visible { outline: 3px solid var(--cell-revealed-color); outline-offset: 2px; }
+        .lang-flag {
+            width: 24px; height: 18px; display: inline-block; flex: 0 0 auto;
+            background-size: cover; background-repeat: no-repeat; background-position: center;
+            border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,0.18) inset;
+        }
+        .lang-flag.en { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'%3E%3Crect width='24' height='18' fill='%23012169'/%3E%3Cpath d='M0 0l24 18M24 0L0 18' stroke='%23fff' stroke-width='4'/%3E%3Cpath d='M0 0l24 18M24 0L0 18' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M12 0v18M0 9h24' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M12 0v18M0 9h24' stroke='%23C8102E' stroke-width='3.2'/%3E%3C/svg%3E"); }
+        .lang-flag.fr { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'%3E%3Crect width='8' height='18' fill='%230055A4'/%3E%3Crect x='8' width='8' height='18' fill='%23fff'/%3E%3Crect x='16' width='8' height='18' fill='%23EF4135'/%3E%3C/svg%3E"); }
+        .lang-flag.es { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'%3E%3Crect width='24' height='18' fill='%23AA151B'/%3E%3Crect y='4.5' width='24' height='9' fill='%23F1BF00'/%3E%3C/svg%3E"); }
+        .lang-flag.zh { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'%3E%3Crect width='24' height='18' fill='%23DE2910'/%3E%3Cpolygon points='4,2 4.7,4.1 6.9,4.1 5.1,5.4 5.8,7.5 4,6.2 2.2,7.5 2.9,5.4 1.1,4.1 3.3,4.1' fill='%23FFDE00'/%3E%3Ccircle cx='9' cy='3.2' r='.8' fill='%23FFDE00'/%3E%3Ccircle cx='11' cy='5.4' r='.8' fill='%23FFDE00'/%3E%3Ccircle cx='11' cy='8.2' r='.8' fill='%23FFDE00'/%3E%3Ccircle cx='9' cy='10.4' r='.8' fill='%23FFDE00'/%3E%3C/svg%3E"); }
+        .lang-flag.hi { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'%3E%3Crect width='24' height='6' fill='%23FF9933'/%3E%3Crect y='6' width='24' height='6' fill='%23fff'/%3E%3Crect y='12' width='24' height='6' fill='%23138808'/%3E%3Ccircle cx='12' cy='9' r='2' fill='none' stroke='%23000080' stroke-width='.7'/%3E%3Ccircle cx='12' cy='9' r='.45' fill='%23000080'/%3E%3C/svg%3E"); }
+        .lang-flag.ja { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 18'%3E%3Crect width='24' height='18' fill='%23fff'/%3E%3Ccircle cx='12' cy='9' r='4.2' fill='%23BC002D'/%3E%3C/svg%3E"); }
+        .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        @media (hover: hover) and (pointer: fine) {
+            [data-tooltip] { position: relative; }
+            [data-tooltip]::after { content: attr(data-tooltip); position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: var(--tooltip-bg); color: var(--tooltip-color); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 100; text-transform: none; font-weight: normal; letter-spacing: normal; }
+            [data-tooltip]:hover::after { opacity: 1; }
+        }
+
+        .game-layout { display: flex; gap: 40px; justify-content: center; align-items: flex-start; width: 100%; max-width: 900px; }
+        .game-side-controls { display: flex; flex-direction: column; gap: 10px; min-width: 180px; }
+        .desktop-number-pad { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .desktop-number-pad .btn { margin: 0; padding: 18px 0; font-size: 1.4em; }
+        .binairo-container { width: 100%; max-width: 500px; }
+        .binairo-grid {
+            --size: 6;
+            display: grid;
+            grid-template-columns: repeat(var(--size), 1fr);
+            gap: 0;
+            border: 3px solid var(--grid-border);
+            background: var(--cell-bg);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            aspect-ratio: 1;
+        }
+        .cell {
+            width: auto;
+            height: auto;
+            aspect-ratio: 1;
+            border: 1px solid var(--cell-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+            font-size: clamp(1rem, 5vw, 2em);
+            color: var(--mode-arcade);
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s ease;
+            overflow: hidden;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        .cell.middle-right { border-right: 3px solid var(--grid-border); }
+        .cell.middle-bottom { border-bottom: 3px solid var(--grid-border); }
+        .cell.fixed { background: var(--cell-fixed-bg); cursor: default; font-weight: bold; font-family: Georgia, serif; color: var(--text-main); }
+        .cell.selected { background: rgba(100, 150, 237, 0.2); border: 2px solid var(--mode-arcade) !important; }
+        .cell.same-number { background-color: rgba(255, 215, 0, 0.4); border-radius: 4px; }
+        .cell.error { background: var(--cell-error-bg); color: var(--cell-conflict-color) !important; font-weight: bold; }
+        .cell.validated { color: var(--cell-validated-color); font-weight: bold; background: var(--cell-success-bg); }
+        .cell.revealed { color: var(--cell-revealed-color); font-weight: bold; background: var(--cell-revealed-bg); font-family: Georgia, serif; }
+        .cell.highlight { background: rgba(100, 150, 237, 0.1); }
+        .numpad { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; width: 100%; }
+        .num-btn { padding: 15px; font-size: 1.5rem; text-align: center; background: var(--cell-bg); border: 1px solid var(--cell-border); border-radius: 8px; cursor: pointer; color: var(--text-main); transition: opacity 0.3s, transform 0.12s ease, filter 0.12s ease; touch-action: manipulation; font-family: Georgia, serif; }
+        .num-btn:active { background: var(--btn-hover-bg); color: var(--btn-hover-text); }
+        .num-btn.clear-num-btn { display: inline-flex; align-items: center; justify-content: center; background: var(--heart-color); border-color: var(--heart-color); color: #fff; box-shadow: 0 2px 8px rgba(214, 106, 134, 0.22); }
+        .num-btn.clear-num-btn:active { background: var(--heart-color); color: #fff; filter: brightness(0.92); transform: translateY(1px); }
+        .num-btn.clear-num-btn svg { width: 1.35em; height: 1.35em; display: block; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 20px; font-size: 1.5em; }
+        .heart { display: inline-block; transition: all 0.3s; color: var(--heart-color); }
+        .heart.used { opacity: 0.2; transform: scale(0.8); }
+        .heart.animating-loss { animation: heartFlyAway 0.6s forwards; }
+        .chrono-bar { height: 7px; width: 100%; border-radius: 999px; margin-top: -8px; margin-bottom: 18px; background: rgba(0,0,0,0.12); overflow: hidden; display: none; }
+        .chrono-progress { width: 100%; height: 100%; background: var(--mode-chrono); transition: width 0.3s ease; }
+        .stats-row { display: flex; justify-content: center; gap: 20px; font-size: 1.1em; margin-bottom: 15px; color: var(--text-main); }
+        .game-over-stats { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--cell-border); }
+        .help-list { width: 100%; display: grid; gap: 10px; margin: 18px 0 22px; text-align: left; }
+        .help-row { display: flex; justify-content: space-between; gap: 14px; align-items: center; padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,0.35); color: var(--text-main); }
+        [data-theme="dark"] .help-row { background: rgba(60,60,60,0.45); }
+        .kbd { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 0.85em; padding: 2px 7px; border: 1px solid var(--cell-border); border-radius: 6px; background: var(--cell-bg); white-space: nowrap; }
+        .score-list { width: 100%; max-width: 480px; margin: 20px 0; max-height: 340px; overflow-y: auto; }
+        .score-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; margin-bottom: 8px; border-radius: 10px; background: rgba(255,255,255,0.45); }
+        [data-theme="dark"] .score-row { background: rgba(60,60,60,0.45); }
+
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 999; flex-direction: column; justify-content: center; align-items: center; color: white; }
+        .overlay.active { display: flex; }
+        .victory-box, .confirm-box { background: var(--screen-bg); padding: 40px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3); text-align: center; color: var(--text-main); z-index: 1000; position: relative; border: 1px solid var(--cell-border); max-width: 90%; width: min(420px, 90vw); backdrop-filter: blur(4px); overflow: hidden; word-break: break-word; }
+        .victory-box h1 { font-size: clamp(1.8em, 8vw, 3em); }
+        .victory-modal { width: min(460px, 92vw); padding: 36px 30px 32px; }
+        .victory-title { display: flex; align-items: center; justify-content: center; gap: 0.35em; flex-wrap: nowrap; white-space: nowrap; letter-spacing: 0.06em; line-height: 1.05; margin-bottom: 12px !important; font-size: clamp(2rem, 7vw, 3rem) !important; }
+        .victory-title .title-text { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
+        .victory-emoji { display: inline-flex; align-items: center; justify-content: center; font-size: 0.7em; line-height: 1; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.12)); }
+        .victory-subtitle { margin-bottom: 4px; }
+        .record-line { display: inline-flex; align-items: center; justify-content: center; gap: 0.4em; }
+        .record-line .record-emoji { font-size: 1.05em; line-height: 1; }
+        .confirm-box { max-width: 400px; padding: 30px; }
+        #finalTimeDisplay { font-size: 2.5em; letter-spacing: 0.24em; margin: 10px 0 20px 0; }
+        .confetti { position: absolute; width: 10px; height: 20px; opacity: 0; animation: fallConfetti linear forwards; z-index: 998; }
+        .ripple { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple-anim 0.5s linear; background-color: rgba(100, 150, 237, 0.4); width: 100%; height: 100%; }
+        @keyframes ripple-anim { to { transform: scale(2.5); opacity: 0; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes popSuccess { 0% { transform: scale(1); background-color: var(--cell-bg); } 50% { transform: scale(1.15); background-color: var(--cell-success-bg); z-index: 10; box-shadow: 0 0 10px rgba(90, 139, 90, 0.5); } 100% { transform: scale(1); background-color: var(--cell-success-bg); } }
+        .cell.validated-anim { animation: popSuccess 0.4s ease-out forwards; }
+        @keyframes heartFlyAway { 0% { transform: scale(1) translateY(0); opacity: 1; color: var(--heart-color); } 50% { transform: scale(1.5) translateY(-15px) rotate(15deg); opacity: 0.8; color: #ff4444; } 100% { transform: scale(0.5) translateY(-30px) rotate(30deg); opacity: 0; } }
+        @keyframes groupShine { 0% { transform: scale(1); z-index: 1; } 50% { background-color: #ffd700; color: #000; transform: scale(1.1); z-index: 10; box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); border-color: #ffd700; } 100% { transform: scale(1); z-index: 1; } }
+        .cell.group-anim { animation: groupShine 0.6s ease-out forwards; }
+        @keyframes fallConfetti { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.001ms !important; }
+        }
+
+        @media screen { #printGridsContainer { display: none !important; } }
+        @media print {
+            @page { size: A4 portrait; margin: 10mm; }
+            html, body { margin: 0 !important; padding: 0 !important; background: white !important; width: auto !important; height: auto !important; }
+            body { display: block !important; min-height: auto !important; overflow: visible !important; }
+            .container, .top-toggles, .overlay, .site-footer, #welcomeScreen, #gameScreen, #scoresScreen, #printScreen { display: none !important; }
+            #printGridsContainer { display: block !important; position: static !important; width: 190mm !important; margin: 0 auto !important; padding: 0 !important; }
+            .print-page { width: 190mm; height: 270mm; box-sizing: border-box; overflow: hidden; page-break-after: always; break-after: page; }
+            .print-page:last-child { page-break-after: auto; break-after: auto; }
+            .print-grids { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); width: 100%; height: 100%; margin: 0; padding: 0; gap: 0; }
+            .print-grid-item { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; box-sizing: border-box; padding: 3mm 4mm; overflow: hidden; break-inside: avoid; page-break-inside: avoid; }
+            .print-grid-title { margin: 0 0 2.5mm 0; font: bold 10pt Georgia, serif; line-height: 1.1; text-align: center; color: black; }
+            .print-binairo-grid { display: grid; width: 64mm; height: 64mm; border: 1.5px solid black; background: white; box-sizing: border-box; }
+            .print-cell { display: flex; align-items: center; justify-content: center; box-sizing: border-box; border: 0.25px solid #777; font: bold 11pt Georgia, serif; color: black; }
+            .print-cell.middle-right { border-right: 1.5px solid black; }
+            .print-cell.middle-bottom { border-bottom: 1.5px solid black; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 14px 14px 10px; align-items: center; justify-content: flex-start; }
+            .site-footer { margin-top: 14px; padding: 8px 12px; border-radius: 18px; font-size: 0.82rem; width: 100%; max-width: 500px; row-gap: 5px; }
+            .site-footer .footer-text { width: 100%; text-align: center; }
+            .top-toggles { top: 10px; right: 10px; gap: 8px; }
+            .toggle-btn, .lang-btn { width: 40px; min-width: 40px; height: 40px; }
+            .icon-slot, .icon-svg { width: 22px; height: 22px; }
+            .lang-menu { grid-template-columns: repeat(3, 40px); gap: 7px; padding: 9px; }
+            .lang-option { width: 40px; height: 32px; }
+            .screen { padding: 28px 16px; margin-top: 58px; }
+            h1 { font-size: 2.6em; }
+            h2 { font-size: 1.05em; }
+            .victory-modal { padding: 30px 18px 26px; }
+            .victory-title { font-size: clamp(1.65rem, 8.4vw, 2.45rem) !important; letter-spacing: 0.03em; gap: 0.24em; }
+            #finalTimeDisplay { font-size: 2.1em; letter-spacing: 0.18em; }
+            .stats-row { gap: 14px; flex-wrap: wrap; }
+            .game-layout { flex-direction: column; align-items: center; gap: 20px; }
+            .game-side-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; max-width: 500px; }
+            .game-side-controls .btn { margin: 0; width: 100%; text-align: center; }
+            .game-side-controls .desktop-clear-btn { display: none; }
+            .desktop-number-pad { display: none; }
+            .numpad { display: grid; }
+            .cell { font-size: clamp(0.85rem, 7vw, 1.9em); }
+            .game-header { font-size: 1.25em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-toggles no-print">
+        <button id="muteBtn" class="toggle-btn" type="button" onclick="UI.toggleMute()" aria-label="Toggle Sound" data-i18n-aria="ariaSound" data-i18n-tooltip="ttMute"><span id="muteIcon" class="icon-slot" aria-hidden="true"></span></button>
+        <button id="themeBtn" class="toggle-btn" type="button" onclick="UI.toggleTheme()" aria-label="Toggle Theme" data-i18n-aria="ariaTheme" data-i18n-tooltip="ttTheme"><span id="themeIcon" class="icon-slot" aria-hidden="true"></span></button>
+        <div id="langPicker" class="lang-picker">
+            <button id="langButton" class="lang-btn" type="button" onclick="UI.toggleLangMenu(event)" aria-haspopup="true" aria-expanded="false" aria-label="Change Language" data-i18n-aria="ariaLang">
+                <span id="currentLangFlag" class="lang-flag fr" aria-hidden="true"></span>
+            </button>
+            <div id="langMenu" class="lang-menu" role="menu" aria-label="Languages">
+                <button class="lang-option" type="button" role="menuitem" data-lang="en" onclick="UI.changeLanguage('en')"><span class="lang-flag en" aria-hidden="true"></span><span class="visually-hidden">English</span></button>
+                <button class="lang-option" type="button" role="menuitem" data-lang="zh" onclick="UI.changeLanguage('zh')"><span class="lang-flag zh" aria-hidden="true"></span><span class="visually-hidden">中文</span></button>
+                <button class="lang-option" type="button" role="menuitem" data-lang="hi" onclick="UI.changeLanguage('hi')"><span class="lang-flag hi" aria-hidden="true"></span><span class="visually-hidden">हिन्दी</span></button>
+                <button class="lang-option" type="button" role="menuitem" data-lang="es" onclick="UI.changeLanguage('es')"><span class="lang-flag es" aria-hidden="true"></span><span class="visually-hidden">Español</span></button>
+                <button class="lang-option" type="button" role="menuitem" data-lang="fr" onclick="UI.changeLanguage('fr')"><span class="lang-flag fr" aria-hidden="true"></span><span class="visually-hidden">Français</span></button>
+                <button class="lang-option" type="button" role="menuitem" data-lang="ja" onclick="UI.changeLanguage('ja')"><span class="lang-flag ja" aria-hidden="true"></span><span class="visually-hidden">日本語</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pauseOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="pauseTitle" tabindex="-1">
+        <h2 id="pauseTitle" style="color: white; margin-bottom: 20px; font-size: 2em;"><span data-i18n="paused">Jeu en pause</span></h2>
+        <button class="btn" onclick="Game.togglePause()" data-i18n="resume" style="color:white; border-color:white; font-size: 1.2em;">Reprendre</button>
+    </div>
+
+    <div id="quitOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="quitTitle" tabindex="-1">
+        <div class="confirm-box">
+            <h2 id="quitTitle" style="margin-bottom: 20px; font-size: 1.5em;"><span data-i18n="quitConfirmTitle">Attention</span></h2>
+            <p data-i18n="quitConfirmText" style="margin-bottom: 30px;">Êtes-vous sûr de vouloir quitter la partie en cours ? La progression sera perdue.</p>
+            <div class="controls-row">
+                <button class="btn" onclick="UI.closeQuitConfirm()" data-i18n="backToGame">Retour au jeu</button>
+                <button class="btn btn-danger" onclick="Game.confirmAbandon()" data-i18n="quitToHome">Accueil</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameOverOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="gameOverTitleEl" tabindex="-1">
+        <div class="victory-box">
+            <h1 id="gameOverTitleEl" data-i18n="gameOverTitle" style="font-size: 3em; margin-bottom: 10px; color: var(--heart-color);">Partie terminée</h1>
+            <p id="gameOverReason" style="font-size: 1.2em; font-weight: bold;">...</p>
+            <div class="stats-row game-over-stats">
+                <div><span data-i18n="timeLabel">Temps :</span> <strong id="gameOverTimeDisplay">--:--</strong></div>
+                <div><span data-i18n="errorsMade">Erreurs :</span> <strong id="gameOverErrorsDisplay">0</strong></div>
+                <div><span data-i18n="hintsUsed">Indices :</span> <strong id="gameOverHintsDisplay">0</strong></div>
+            </div>
+            <div class="controls-row" style="margin-top: 30px;"><button class="btn btn-main" onclick="Game.start()" data-i18n="tryAgain">Réessayer</button></div>
+            <div class="controls-row" style="margin-top: 10px;"><button class="btn" onclick="UI.closeGameOver()" data-i18n="back">Retour au menu</button></div>
+        </div>
+    </div>
+
+    <div id="victoryOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="victoryTitle" tabindex="-1">
+        <div class="victory-box victory-modal">
+            <h1 id="victoryTitle" class="victory-title"><span class="victory-emoji" aria-hidden="true">🎉</span><span class="title-text" data-i18n="congratulations">Félicitations !</span><span class="victory-emoji" aria-hidden="true">✨</span></h1>
+            <p class="victory-subtitle" data-i18n="solvedBinairo">Vous avez résolu la grille.</p>
+            <h2 id="finalTimeDisplay" aria-live="polite">--:--</h2>
+            <div class="stats-row">
+                <div><span data-i18n="errorsMade">Erreurs :</span> <strong id="finalErrorsDisplay">0</strong></div>
+                <div><span data-i18n="hintsUsed">Indices :</span> <strong id="finalHintsDisplay">0</strong></div>
+            </div>
+            <p id="newRecordMsg" class="record-line" aria-live="polite" style="color: #d4a855; font-weight: bold; font-size: 1.5em; display: none; margin-bottom: 10px;"><span class="record-emoji" aria-hidden="true">🏆</span><span data-i18n="newRecord">Nouveau record !</span></p>
+            <div class="controls-row" style="margin-top: 20px;"><button class="btn btn-main" onclick="Game.start()" data-i18n="newGame">Nouvelle partie</button></div>
+            <div class="controls-row" style="margin-top: 10px;"><button class="btn" onclick="UI.closeVictory()" data-i18n="back">Retour au menu</button></div>
+        </div>
+    </div>
+
+
+
+    <div id="helpOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="helpTitle" tabindex="-1">
+        <div class="confirm-box">
+            <h2 id="helpTitle" data-i18n="helpTitle" style="margin-bottom: 12px; font-size: 1.6em;">Aide clavier</h2>
+            <div class="help-list">
+                <div class="help-row"><span data-i18n="helpArrows">Se déplacer dans la grille</span><span class="kbd">&#8592; &#8593; &#8594; &#8595;</span></div>
+                <div class="help-row"><span data-i18n="helpDigits">Remplir une case</span><span class="kbd">0 / 1</span></div>
+                <div class="help-row"><span data-i18n="helpDelete">Effacer une case</span><span class="kbd">Suppr / Retour</span></div>
+                <div class="help-row"><span data-i18n="helpHint">Demander un indice</span><span class="kbd">H</span></div>
+                <div class="help-row"><span data-i18n="helpPause">Mettre en pause</span><span class="kbd">Espace</span></div>
+                <div class="help-row"><span data-i18n="helpQuit">Quitter la partie</span><span class="kbd">Echap</span></div>
+            </div>
+            <button id="helpCloseBtn" class="btn btn-main" onclick="UI.closeHelp()" data-i18n="close">Fermer</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="welcomeScreen" class="screen active flex-col-center">
+            <div class="title" style="margin-bottom: 30px;"><h1 data-i18n="binairo">BINAIRO</h1><h2 data-i18n="binairoSub">TAKUZU</h2></div>
+            <div class="menu-section">
+                <p data-i18n="chooseMode">Choisissez votre mode :</p>
+                <div class="controls-row">
+                    <button class="btn btn-mode selected" data-mode="arcade" onclick="UI.selectMode('arcade')" data-i18n-tooltip="ttArcade"><span data-i18n="arcade">Arcade</span></button>
+                    <button class="btn btn-mode" data-mode="zen" onclick="UI.selectMode('zen')" data-i18n-tooltip="ttZen"><span data-i18n="zen">Zen</span></button>
+                    <button class="btn btn-mode" data-mode="chrono" onclick="UI.selectMode('chrono')" data-i18n-tooltip="ttChrono"><span data-i18n="chrono">Chrono</span></button>
+                    <button class="btn btn-mode" data-mode="print" onclick="UI.selectMode('print')" data-i18n-tooltip="ttPrint"><span data-i18n="print">Imprimer</span></button>
+                </div>
+                <div id="modeDescription" class="mode-desc"></div>
+            </div>
+            <div class="menu-section">
+                <p data-i18n="chooseLevel">Choisissez votre niveau :</p>
+                <div class="controls-row">
+                    <button class="btn btn-difficulty selected" data-diff="easy" onclick="UI.selectDifficulty('easy')"><span data-i18n="easy">Facile</span> 6x6</button>
+                    <button class="btn btn-difficulty" data-diff="medium" onclick="UI.selectDifficulty('medium')"><span data-i18n="medium">Moyen</span> 8x8</button>
+                    <button class="btn btn-difficulty" data-diff="hard" onclick="UI.selectDifficulty('hard')"><span data-i18n="hard">Difficile</span> 10x10</button>
+                    <button class="btn btn-difficulty" data-diff="expert" onclick="UI.selectDifficulty('expert')"><span data-i18n="expert">Expert</span> 12x12</button>
+                </div>
+            </div>
+            <div class="controls-row" style="margin-top: 10px; width: 100%; flex-direction: column; align-items: center;">
+                <div class="controls-row"><button id="mainActionBtn" class="btn btn-main" onclick="Game.start()" data-i18n="start">Nouvelle partie</button><button class="btn" onclick="UI.showScores()" data-i18n="viewScores">Mes scores</button></div>
+                <button id="resumeGameBtn" class="btn btn-resume" onclick="Game.resumeGame()" data-i18n="resumeGame" style="display:none; max-width: 320px;">Reprendre la partie</button>
+            </div>
+            <div class="rules-section">
+                <h3 data-i18n="rulesTitle">Règles du jeu</h3>
+                <ul>
+                    <li data-i18n="rule1">Remplissez la grille avec des 0 et des 1.</li>
+                    <li data-i18n="rule2">Chaque ligne et colonne doit contenir autant de 0 que de 1.</li>
+                    <li data-i18n="rule3">Jamais plus de deux chiffres identiques consécutifs.</li>
+                    <li data-i18n="rule4">Toutes les lignes doivent être uniques.</li>
+                    <li data-i18n="rule5">Toutes les colonnes doivent être uniques.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="gameScreen" class="screen flex-col-center">
+            <div class="title small-title"><h1 data-i18n="binairo">BINAIRO</h1><h2 id="modeIndicator">ARCADE - FACILE</h2></div>
+            <div class="game-header"><div class="timer" id="timerDisplay" aria-live="polite">00:00</div><div class="hearts" id="livesDisplay"></div></div>
+            <div class="chrono-bar" id="chronoBar"><div class="chrono-progress" id="chronoProgress"></div></div>
+            <div class="game-layout">
+                <div class="binairo-container"><div id="binairoGrid" class="binairo-grid"></div><div class="numpad" id="numpad"></div></div>
+                <div class="game-side-controls">
+                    <div class="desktop-number-pad"><button class="btn" onclick="Game.placeValue(0)">0</button><button class="btn" onclick="Game.placeValue(1)">1</button></div>
+                    <button class="btn" id="hintBtn" onclick="Game.useHint()" data-i18n-tooltip="ttHint"><span data-i18n="hint">Indice</span> (<span id="hintsLeft">3</span>)</button>
+                    <button class="btn desktop-clear-btn" onclick="Game.clearCell()" data-i18n-tooltip="ttClear"><span data-i18n="clear">Effacer</span></button>
+                    <button class="btn" onclick="UI.showHelp()" data-i18n-tooltip="ttHelp"><span data-i18n="help">Aide</span></button>
+                    <button class="btn" onclick="Game.togglePause()"><span data-i18n="pause">Pause</span></button>
+                    <button class="btn btn-danger" onclick="Game.abandon()"><span data-i18n="abandon">Quitter</span></button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scoresScreen" class="screen flex-col-center">
+            <div class="title small-title"><h1 data-i18n="binairo">BINAIRO</h1><h2 data-i18n="myScores">Mes meilleurs temps</h2></div>
+            <div id="scoresList" class="score-list"></div>
+            <div class="controls-row"><button class="btn" onclick="UI.showScreen('welcomeScreen')" data-i18n="back">Retour au menu</button><button class="btn btn-danger" onclick="UI.clearScores()" data-i18n="clearScores">Effacer l'historique</button></div>
+        </div>
+
+        <div id="printScreen" class="screen flex-col-center" style="width:100%; max-width: 600px; margin: 0 auto;">
+            <div class="title small-title"><h1 data-i18n="binairo">BINAIRO</h1><h2 data-i18n="printMode">Mode Impression</h2></div>
+            <div style="margin: 20px 0; color: var(--text-main); font-style: italic; text-align: center;"><p data-i18n="printInfo">Génère des feuilles A4 prêtes à imprimer. 6 grilles par page.</p></div>
+            <div class="menu-section" style="margin-bottom: 20px;"><p data-i18n="chooseLevel">Niveau :</p><div class="controls-row">
+                <button class="btn btn-print-diff selected" data-diff="easy" onclick="UI.selectPrintDifficulty('easy')"><span data-i18n="easy">Facile</span> 6x6</button>
+                <button class="btn btn-print-diff" data-diff="medium" onclick="UI.selectPrintDifficulty('medium')"><span data-i18n="medium">Moyen</span> 8x8</button>
+                <button class="btn btn-print-diff" data-diff="hard" onclick="UI.selectPrintDifficulty('hard')"><span data-i18n="hard">Difficile</span> 10x10</button>
+                <button class="btn btn-print-diff" data-diff="expert" onclick="UI.selectPrintDifficulty('expert')"><span data-i18n="expert">Expert</span> 12x12</button>
+            </div></div>
+            <div class="controls-row" style="margin-bottom: 30px; align-items: center;"><span data-i18n="pagesCount" style="font-weight: bold; margin-right: 10px;">Nombre de pages :</span><select id="printPageCount" class="btn" style="padding: 5px 15px; font-size: 1.1em;"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
+            <div class="controls-row" style="margin-top: 20px;"><button class="btn btn-main" onclick="UI.executePrint()" id="printActionBtn" style="background:var(--print-color); border-color:var(--print-color);"><span data-i18n="printBtn">Générer et imprimer</span></button></div>
+            <div class="controls-row" style="margin-top: 10px;"><button class="btn" onclick="UI.showScreen('welcomeScreen')" data-i18n="back">Retour au menu</button></div>
+        </div>
+    </div>
+
+    <div id="printGridsContainer" class="only-print"></div>
+
+
+    <footer class="site-footer no-print" aria-label="Source code and support">
+        <span class="footer-text">Source code and support:</span>
+        <a href="https://github.com/Fabrice-breizh" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <a class="footer-support" href="https://www.buymeacoffee.com/fabricebreizh" target="_blank" rel="noopener noreferrer" aria-label="Buy me some tokens">
+            <svg class="footer-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 5h10v6a5 5 0 0 1-10 0V5Z"></path>
+                <path d="M15 7h2a3 3 0 0 1 0 6h-2"></path>
+                <path d="M4 19h13"></path>
+                <path d="M7 22h7"></path>
+            </svg>
+            <span>Buy me</span>
+            <span class="footer-strike">a coffee</span>
+            <strong>some tokens</strong>
+            <svg class="footer-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 5h10v6a5 5 0 0 1-10 0V5Z"></path>
+                <path d="M15 7h2a3 3 0 0 1 0 6h-2"></path>
+                <path d="M4 19h13"></path>
+                <path d="M7 22h7"></path>
+            </svg>
+        </a>
+    </footer>
+
+    <script>
+        const I18n = {
+            en: {
+                binairo: 'BINAIRO', binairoSub: 'TAKUZU', chooseMode: 'Choose your mode:', chooseLevel: 'Choose your level:',
+                arcade: 'Arcade', zen: 'Zen', chrono: 'Time Attack', print: 'Print', printMode: 'Print Mode',
+                easy: 'Easy', medium: 'Medium', hard: 'Hard', expert: 'Expert', start: 'New Game', viewScores: 'My Scores',
+                hint: 'Hint', clear: 'Clear', pause: 'Pause', abandon: 'Quit', paused: 'Game Paused', resume: 'Resume',
+                congratulations: 'Congratulations!', solvedBinairo: 'You solved the Binairo grid.', newGame: 'NEW GAME', myScores: 'Best Times',
+                back: 'Back to menu', clearScores: 'Clear History', noScores: 'No scores yet.', quitConfirmTitle: 'Warning',
+                quitConfirmText: 'Are you sure you want to quit the current game? Progress will be lost.', backToGame: 'Back to game', quitToHome: 'Home (Quit)',
+                newRecord: 'New Record!', gameOverTitle: 'Game Over', tryAgain: 'TRY AGAIN', timeUp: 'Time is up!', outLives: 'You ran out of lives.',
+                rulesTitle: 'Game rules', rule1: 'Fill the grid with 0s and 1s.', rule2: 'Each row and column must contain the same number of 0s and 1s.', rule3: 'Never place more than two identical digits in a row.', rule4: 'All rows must be unique.', rule5: 'All columns must be unique.',
+                pagesCount: 'Number of pages:', printInfo: 'Generates A4 ready-to-print sheets. 6 puzzles per page.', printBtn: 'Generate & Print', generating: 'Generating...',
+                descArcade: 'Errors cost lives. Hints add time.', descZen: 'No pressure. Infinite lives and hints.', descChrono: 'Race against time. Hints cost time.', descPrint: 'Generate PDF grids to play on paper.',
+                ttArcade: 'Classic with lives', ttZen: 'No stress, infinite lives', ttChrono: 'Race against time', ttPrint: 'Generate PDF', ttHint: 'Reveal a cell', ttClear: 'Clear selected cell', ttMute: 'Toggle Sound', ttTheme: 'Toggle Theme',
+                errorsMade: 'Errors:', hintsUsed: 'Hints used:', ariaSound: 'Toggle Sound', ariaTheme: 'Toggle Theme', ariaLang: 'Change Language', resumeGame: 'Resume current game', help: 'Help', helpTitle: 'Keyboard help', helpArrows: 'Move in the grid', helpDigits: 'Fill a cell', helpDelete: 'Clear a cell', helpHint: 'Use a hint', helpPause: 'Pause the game', helpQuit: 'Quit the game', close: 'Close', timeLabel: 'Time:', ttHelp: 'Keyboard shortcuts'
+            },
+            zh: {
+                binairo: 'BINAIRO', binairoSub: 'TAKUZU', chooseMode: '选择模式：', chooseLevel: '选择难度：',
+                arcade: '街机', zen: '禅模式', chrono: '计时赛', print: '打印', printMode: '打印模式', easy: '简单', medium: '中等', hard: '困难', expert: '专家', start: '新游戏', viewScores: '我的分数',
+                hint: '提示', clear: '清除', pause: '暂停', abandon: '退出', paused: '游戏暂停', resume: '继续', congratulations: '恭喜！', solvedBinairo: '你解开了 Binairo 网格。', newGame: '新游戏', myScores: '最佳时间', back: '返回菜单', clearScores: '清除记录', noScores: '暂无分数。',
+                quitConfirmTitle: '警告', quitConfirmText: '确定要退出当前游戏吗？进度将丢失。', backToGame: '返回游戏', quitToHome: '主页 (退出)', newRecord: '新纪录！', gameOverTitle: '游戏结束', tryAgain: '再试一次', timeUp: '时间到！', outLives: '生命耗尽！',
+                rulesTitle: '游戏规则', rule1: '用 0 和 1 填满网格。', rule2: '每行每列必须有相同数量的 0 和 1。', rule3: '不能连续出现三个相同数字。', rule4: '所有行都必须唯一。', rule5: '所有列都必须唯一。',
+                pagesCount: '页数：', printInfo: '生成可直接打印的 A4 页面。每页 6 个谜题。', printBtn: '生成并打印', generating: '生成中...', descArcade: '错误会扣除生命值。提示会增加时间。', descZen: '没有压力。无限生命和提示。', descChrono: '与时间赛跑。提示会消耗时间。', descPrint: '生成 PDF 网格以便在纸上玩。',
+                ttArcade: '带有生命的经典模式', ttZen: '无压力，无限生命', ttChrono: '与时间赛跑', ttPrint: '生成 PDF', ttHint: '显示一格', ttClear: '清除选中格', ttMute: '切换声音', ttTheme: '切换主题', errorsMade: '错误：', hintsUsed: '使用提示：', ariaSound: '切换声音', ariaTheme: '切换主题', ariaLang: '切换语言', resumeGame: '继续当前游戏', help: '帮助', helpTitle: '键盘帮助', helpArrows: '在网格中移动', helpDigits: '填写一格', helpDelete: '清除一格', helpHint: '使用提示', helpPause: '暂停游戏', helpQuit: '退出游戏', close: '关闭', timeLabel: '时间：', ttHelp: '键盘快捷键'
+            },
+            hi: {
+                binairo: 'BINAIRO', binairoSub: 'TAKUZU', chooseMode: 'अपना मोड चुनें:', chooseLevel: 'अपना स्तर चुनें:',
+                arcade: 'आर्केड', zen: 'ज़ेन', chrono: 'समय चुनौती', print: 'प्रिंट', printMode: 'प्रिंट मोड', easy: 'आसान', medium: 'मध्यम', hard: 'कठिन', expert: 'विशेषज्ञ', start: 'नया खेल', viewScores: 'मेरे स्कोर',
+                hint: 'संकेत', clear: 'मिटाएं', pause: 'विराम', abandon: 'छोड़ें', paused: 'खेल रुका हुआ है', resume: 'फिर से शुरू करें', congratulations: 'बधाई हो!', solvedBinairo: 'आपने Binairo ग्रिड हल कर लिया।', newGame: 'नया खेल', myScores: 'सर्वश्रेष्ठ समय', back: 'मेनू पर वापस', clearScores: 'इतिहास मिटाएं', noScores: 'अभी कोई स्कोर नहीं।',
+                quitConfirmTitle: 'चेतावनी', quitConfirmText: 'क्या आप वर्तमान खेल छोड़ना चाहते हैं? प्रगति खो जाएगी।', backToGame: 'खेल पर वापस', quitToHome: 'होम (छोड़ें)', newRecord: 'नया रिकॉर्ड!', gameOverTitle: 'खेल खत्म', tryAgain: 'पुनः प्रयास करें', timeUp: 'समय समाप्त!', outLives: 'जीवन समाप्त!',
+                rulesTitle: 'खेल के नियम', rule1: 'ग्रिड को 0 और 1 से भरें।', rule2: 'हर पंक्ति और कॉलम में 0 और 1 बराबर संख्या में होने चाहिए।', rule3: 'तीन समान अंक लगातार नहीं हो सकते।', rule4: 'सभी पंक्तियाँ अलग होनी चाहिए।', rule5: 'सभी कॉलम अलग होने चाहिए।',
+                pagesCount: 'पृष्ठों की संख्या:', printInfo: 'प्रिंट के लिए तैयार A4 शीट बनाता है। प्रति पृष्ठ 6 पहेलियाँ।', printBtn: 'बनाएं और प्रिंट करें', generating: 'बना रहा है...', descArcade: 'गलतियों पर जीवन कम होगा। संकेत समय जोड़ते हैं।', descZen: 'कोई दबाव नहीं। अनंत जीवन और संकेत।', descChrono: 'समय के खिलाफ दौड़। संकेतों में समय लगता है।', descPrint: 'कागज पर खेलने के लिए PDF बनाएं।',
+                ttArcade: 'जीवन के साथ क्लासिक', ttZen: 'कोई तनाव नहीं, अनंत जीवन', ttChrono: 'समय के खिलाफ दौड़', ttPrint: 'PDF बनाएं', ttHint: 'एक सेल दिखाएं', ttClear: 'चुनी हुई सेल मिटाएं', ttMute: 'ध्वनि टॉगल करें', ttTheme: 'थीम टॉगल करें', errorsMade: 'गलतियां:', hintsUsed: 'उपयोग किए गए संकेत:', ariaSound: 'ध्वनि टॉगल', ariaTheme: 'थीम टॉगल', ariaLang: 'भाषा बदलें', resumeGame: 'वर्तमान खेल फिर शुरू करें', help: 'मदद', helpTitle: 'कीबोर्ड मदद', helpArrows: 'ग्रिड में चलें', helpDigits: 'सेल भरें', helpDelete: 'सेल मिटाएं', helpHint: 'संकेत लें', helpPause: 'खेल रोकें', helpQuit: 'खेल छोड़ें', close: 'बंद करें', timeLabel: 'समय:', ttHelp: 'कीबोर्ड शॉर्टकट'
+            },
+            es: {
+                binairo: 'BINAIRO', binairoSub: 'TAKUZU', chooseMode: 'Elige tu modo:', chooseLevel: 'Elige tu nivel:',
+                arcade: 'Arcade', zen: 'Zen', chrono: 'Contrarreloj', print: 'Imprimir', printMode: 'Modo Impresión', easy: 'Fácil', medium: 'Medio', hard: 'Difícil', expert: 'Experto', start: 'Nueva Partida', viewScores: 'Mis Puntuaciones',
+                hint: 'Pista', clear: 'Borrar', pause: 'Pausa', abandon: 'Salir', paused: 'Juego en pausa', resume: 'Reanudar', congratulations: '¡Felicidades!', solvedBinairo: 'Has resuelto la cuadrícula Binairo.', newGame: 'NUEVA PARTIDA', myScores: 'Mejores Tiempos', back: 'Volver al menú', clearScores: 'Borrar historial', noScores: 'No hay puntuaciones.',
+                quitConfirmTitle: 'Advertencia', quitConfirmText: '¿Seguro que quieres abandonar la partida? El progreso se perderá.', backToGame: 'Volver al juego', quitToHome: 'Inicio (Salir)', newRecord: '¡Nuevo récord!', gameOverTitle: 'Fin del juego', tryAgain: 'REINTENTAR', timeUp: '¡Tiempo agotado!', outLives: '¡Te has quedado sin vidas!',
+                rulesTitle: 'Reglas del juego', rule1: 'Rellena la cuadrícula con 0 y 1.', rule2: 'Cada fila y columna debe contener la misma cantidad de 0 y 1.', rule3: 'Nunca coloques más de dos cifras iguales seguidas.', rule4: 'Todas las filas deben ser únicas.', rule5: 'Todas las columnas deben ser únicas.',
+                pagesCount: 'Número de páginas:', printInfo: 'Genera hojas A4 listas para imprimir. 6 pasatiempos por página.', printBtn: 'Generar e imprimir', generating: 'Generando...', descArcade: 'Los errores cuestan vidas. Las pistas añaden tiempo.', descZen: 'Sin presión. Vidas y pistas infinitas.', descChrono: 'Contrarreloj. Las pistas cuestan tiempo.', descPrint: 'Genera cuadrículas PDF para jugar en papel.',
+                ttArcade: 'Clásico con vidas', ttZen: 'Sin estrés, vidas infinitas', ttChrono: 'Contrarreloj', ttPrint: 'Generar PDF', ttHint: 'Revelar una celda', ttClear: 'Borrar la celda seleccionada', ttMute: 'Silenciar', ttTheme: 'Alternar tema', errorsMade: 'Errores:', hintsUsed: 'Pistas usadas:', ariaSound: 'Activar/Silenciar', ariaTheme: 'Cambiar tema', ariaLang: 'Cambiar idioma', resumeGame: 'Reanudar partida actual', help: 'Ayuda', helpTitle: 'Ayuda de teclado', helpArrows: 'Moverse en la cuadrícula', helpDigits: 'Rellenar una celda', helpDelete: 'Borrar una celda', helpHint: 'Usar una pista', helpPause: 'Pausar la partida', helpQuit: 'Salir de la partida', close: 'Cerrar', timeLabel: 'Tiempo:', ttHelp: 'Atajos de teclado'
+            },
+            fr: {
+                binairo: 'BINAIRO', binairoSub: 'TAKUZU', chooseMode: 'Choisissez votre mode :', chooseLevel: 'Choisissez votre niveau :',
+                arcade: 'Arcade', zen: 'Zen', chrono: 'Chrono', print: 'Imprimer', printMode: 'Mode Impression', easy: 'Facile', medium: 'Moyen', hard: 'Difficile', expert: 'Expert', start: 'Nouvelle Partie', viewScores: 'Mes Scores',
+                hint: 'Indice', clear: 'Effacer', pause: 'Pause', abandon: 'Quitter', paused: 'Jeu en pause', resume: 'Reprendre', congratulations: 'Félicitations !', solvedBinairo: 'Vous avez résolu la grille.', newGame: 'NOUVELLE PARTIE', myScores: 'Mes Meilleurs Temps', back: 'Retour au menu', clearScores: 'Effacer l\'historique', noScores: 'Aucun score enregistré.',
+                quitConfirmTitle: 'Attention', quitConfirmText: 'Êtes-vous sûr de vouloir quitter la partie en cours ? La progression sera perdue.', backToGame: 'Retour au jeu', quitToHome: 'Accueil (Quitter)', newRecord: 'Nouveau record !', gameOverTitle: 'Partie terminée', tryAgain: 'RÉESSAYER', timeUp: 'Temps écoulé !', outLives: 'Plus de vies !',
+                rulesTitle: 'Règles du jeu', rule1: 'Remplissez la grille avec des 0 et des 1.', rule2: 'Chaque ligne et colonne doit contenir autant de 0 que de 1.', rule3: 'Jamais plus de deux chiffres identiques consécutifs.', rule4: 'Toutes les lignes doivent être uniques.', rule5: 'Toutes les colonnes doivent être uniques.',
+                pagesCount: 'Nombre de pages :', printInfo: 'Génère des feuilles A4 prêtes à imprimer. 6 grilles par page.', printBtn: 'Générer et imprimer', generating: 'Génération...', descArcade: 'Les erreurs coûtent des vies. Les indices ajoutent du temps.', descZen: 'Aucune pression. Vies et indices illimités.', descChrono: 'Contre la montre. Les indices coûtent du temps.', descPrint: 'Générez des grilles PDF pour jouer sur papier.',
+                ttArcade: 'Classique avec vies', ttZen: 'Sans stress, vies infinies', ttChrono: 'Contre la montre', ttPrint: 'Générer PDF', ttHint: 'Révéler une case', ttClear: 'Effacer la case sélectionnée', ttMute: 'Couper/Activer le son', ttTheme: 'Changer le thème', errorsMade: 'Erreurs :', hintsUsed: 'Indices utilisés :', ariaSound: 'Activer/Couper le son', ariaTheme: 'Changer le thème', ariaLang: 'Changer la langue', resumeGame: 'Reprendre la partie', help: 'Aide', helpTitle: 'Aide clavier', helpArrows: 'Se déplacer dans la grille', helpDigits: 'Remplir une case', helpDelete: 'Effacer une case', helpHint: 'Demander un indice', helpPause: 'Mettre en pause', helpQuit: 'Quitter la partie', close: 'Fermer', timeLabel: 'Temps :', ttHelp: 'Raccourcis clavier'
+            },
+            ja: {
+                binairo: 'BINAIRO', binairoSub: 'TAKUZU', chooseMode: 'モードを選択:', chooseLevel: '難易度を選択:',
+                arcade: 'アーケード', zen: '禅', chrono: 'タイムアタック', print: '印刷', printMode: '印刷モード', easy: '初級', medium: '中級', hard: '上級', expert: '達人', start: '新しいゲーム', viewScores: 'スコア',
+                hint: 'ヒント', clear: '消去', pause: '一時停止', abandon: '終了', paused: '一時停止中', resume: '再開', congratulations: 'おめでとうございます！', solvedBinairo: 'Binairo をクリアしました。', newGame: '新しいゲーム', myScores: 'ベストタイム', back: 'メニューに戻る', clearScores: '履歴を消去', noScores: 'スコアはまだありません。',
+                quitConfirmTitle: '警告', quitConfirmText: '現在のゲームを終了しますか？進行状況は失われます。', backToGame: 'ゲームに戻る', quitToHome: 'ホーム (終了)', newRecord: '新記録！', gameOverTitle: 'ゲームオーバー', tryAgain: 'もう一度', timeUp: '時間切れ！', outLives: 'ライフがなくなりました！',
+                rulesTitle: 'ルール', rule1: 'グリッドを 0 と 1 で埋めます。', rule2: '各行と各列には同じ数の 0 と 1 が必要です。', rule3: '同じ数字を 3 つ連続で置くことはできません。', rule4: 'すべての行は一意でなければなりません。', rule5: 'すべての列は一意でなければなりません。',
+                pagesCount: 'ページ数:', printInfo: '印刷用のA4シートを生成します。1ページあたり6問。', printBtn: '生成して印刷', generating: '生成中...', descArcade: 'ミスをするとライフが減ります。ヒントで時間が加算されます。', descZen: 'プレッシャーなし。ライフとヒントは無限。', descChrono: '時間との戦い。ヒントを使うと時間が減ります。', descPrint: '紙で遊ぶためのPDFグリッドを生成します。',
+                ttArcade: 'ライフありのクラシック', ttZen: 'ストレスなし、無限のライフ', ttChrono: '時間との戦い', ttPrint: 'PDFを生成', ttHint: 'セルを表示', ttClear: '選択セルを消去', ttMute: '音声を切替', ttTheme: 'テーマを切替', errorsMade: 'ミス:', hintsUsed: '使用したヒント:', ariaSound: '音声の切替', ariaTheme: 'テーマの切替', ariaLang: '言語の変更', resumeGame: '現在のゲームを再開', help: 'ヘルプ', helpTitle: 'キーボードヘルプ', helpArrows: 'グリッド内を移動', helpDigits: 'マスを入力', helpDelete: 'マスを消去', helpHint: 'ヒントを使う', helpPause: '一時停止', helpQuit: 'ゲームを終了', close: '閉じる', timeLabel: '時間:', ttHelp: 'キーボードショートカット'
+            }
+        };
+
+        const Storage = {
+            get(key, fallback = null) {
+                try {
+                    const value = window.localStorage.getItem(key);
+                    return value === null ? fallback : value;
+                } catch (error) {
+                    return fallback;
+                }
+            },
+            set(key, value) {
+                try { window.localStorage.setItem(key, String(value)); return true; }
+                catch (error) { return false; }
+            },
+            remove(key) {
+                try { window.localStorage.removeItem(key); }
+                catch (error) {}
+            },
+            getJSON(key, fallback = null) {
+                try {
+                    const raw = this.get(key, null);
+                    return raw === null ? fallback : JSON.parse(raw);
+                } catch (error) {
+                    return fallback;
+                }
+            },
+            setJSON(key, value) {
+                return this.set(key, JSON.stringify(value));
+            }
+        };
+
+        const getDefaultLang = () => {
+            const saved = Storage.get('binairoLang');
+            if (saved && I18n[saved]) return saved;
+            const sys = navigator.language.slice(0, 2).toLowerCase();
+            return I18n[sys] ? sys : 'en';
+        };
+
+        const State = {
+            lang: getDefaultLang(),
+            theme: Storage.get('binairoTheme', 'classic'),
+            themes: ['classic', 'sakura', 'matcha', 'fuji', 'dark'],
+            muted: Storage.get('binairoMuted') === 'true',
+            mode: 'arcade', diff: 'easy', printDiff: 'easy',
+            grid: [], solution: [], status: [], cells: [], selectedCell: null,
+            timer: 0, interval: null, isPaused: false, isGameOver: false,
+            lives: 3, hints: 3, errorsMade: 0, hintsUsed: 0, chronoLimit: 0, helpWasRunning: false, quitWasRunning: false, lastFocusedElement: null,
+            config: {
+                easy: { size: 6, holes: 0.30, lives: 5, hints: 5, time: 600 },
+                medium: { size: 8, holes: 0.40, lives: 4, hints: 4, time: 540 },
+                hard: { size: 10, holes: 0.50, lives: 3, hints: 3, time: 480 },
+                expert: { size: 12, holes: 0.58, lives: 2, hints: 2, time: 420 }
+            }
+        };
+
+        const t = key => (I18n[State.lang] && I18n[State.lang][key]) || I18n.en[key] || key;
+
+        const Sound = {
+            ctx: null,
+            init() {
+                if (!this.ctx && !State.muted) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContext) this.ctx = new AudioContext();
+                }
+            },
+            tone(freq, dur = 0.18, type = 'sine') {
+                if (State.muted) return;
+                if (!this.ctx) this.init();
+                if (!this.ctx) return;
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.55, this.ctx.currentTime + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + dur);
+            },
+            play(name) {
+                if (name === 'write') this.tone(523.25);
+                else if (name === 'error') this.tone(120, 0.35, 'sawtooth');
+                else if (name === 'bell') this.tone(1046.50, 1.0);
+                else if (name === 'win') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => setTimeout(() => this.tone(f), i * 150));
+                }
+            }
+        };
+
+        const Engine = {
+            shuffle(arr) {
+                const a = [...arr];
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [a[i], a[j]] = [a[j], a[i]];
+                }
+                return a;
+            },
+            arraysEqual(a, b) { return a.length === b.length && a.every((v, i) => v === b[i]); },
+            hasThreeConsecutive(line) {
+                for (let i = 0; i < line.length - 2; i++) {
+                    if (line[i] !== -1 && line[i] === line[i + 1] && line[i] === line[i + 2]) return true;
+                }
+                return false;
+            },
+            isValidLine(line) {
+                const half = line.length / 2;
+                return line.filter(v => v === 0).length === half && line.filter(v => v === 1).length === half && !this.hasThreeConsecutive(line);
+            },
+            isValidPartial(grid, row, col) {
+                const size = grid.length;
+                const half = size / 2;
+                const rowValues = grid[row];
+                const colValues = grid.map(r => r[col]);
+                if (this.hasThreeConsecutive(rowValues) || this.hasThreeConsecutive(colValues)) return false;
+                if (rowValues.filter(v => v === 0).length > half || rowValues.filter(v => v === 1).length > half) return false;
+                if (colValues.filter(v => v === 0).length > half || colValues.filter(v => v === 1).length > half) return false;
+                if (rowValues.every(v => v !== -1)) {
+                    for (let r = 0; r < size; r++) if (r !== row && grid[r].every(v => v !== -1) && this.arraysEqual(rowValues, grid[r])) return false;
+                }
+                if (colValues.every(v => v !== -1)) {
+                    for (let c = 0; c < size; c++) {
+                        if (c !== col) {
+                            const other = grid.map(r => r[c]);
+                            if (other.every(v => v !== -1) && this.arraysEqual(colValues, other)) return false;
+                        }
+                    }
+                }
+                return true;
+            },
+            isValidComplete(grid) {
+                const size = grid.length;
+                for (let r = 0; r < size; r++) {
+                    if (!this.isValidLine(grid[r])) return false;
+                    for (let r2 = r + 1; r2 < size; r2++) if (this.arraysEqual(grid[r], grid[r2])) return false;
+                }
+                for (let c = 0; c < size; c++) {
+                    const col = grid.map(row => row[c]);
+                    if (!this.isValidLine(col)) return false;
+                    for (let c2 = c + 1; c2 < size; c2++) if (this.arraysEqual(col, grid.map(row => row[c2]))) return false;
+                }
+                return true;
+            },
+            generateValidLine(size, grid, rowIndex) {
+                const values = this.shuffle([...Array(size / 2).fill(0), ...Array(size / 2).fill(1)]);
+                if (this.hasThreeConsecutive(values)) return null;
+                for (let c = 0; c < size; c++) {
+                    const col = [];
+                    for (let r = 0; r < rowIndex; r++) col.push(grid[r][c]);
+                    col.push(values[c]);
+                    if (col.filter(v => v === 0).length > size / 2 || col.filter(v => v === 1).length > size / 2 || this.hasThreeConsecutive(col)) return null;
+                }
+                return values;
+            },
+            generateSolution(size) {
+                const sol = Array(size).fill(null).map(() => Array(size).fill(-1));
+                for (let r = 0; r < size; r++) {
+                    let done = false;
+                    for (let attempt = 0; attempt < 1200 && !done; attempt++) {
+                        const line = this.generateValidLine(size, sol, r);
+                        if (!line) continue;
+                        let unique = true;
+                        for (let pr = 0; pr < r; pr++) if (this.arraysEqual(line, sol[pr])) unique = false;
+                        if (unique) { sol[r] = line; done = true; }
+                    }
+                    if (!done) return this.generateSolution(size);
+                }
+                if (!this.isValidComplete(sol)) return this.generateSolution(size);
+                return sol;
+            },
+            solveLimited(puzzle, maxSolutions) {
+                const size = puzzle.length;
+                const solutions = [];
+                const solve = grid => {
+                    if (solutions.length >= maxSolutions) return;
+                    let best = null;
+                    let bestMoves = null;
+                    for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) if (grid[r][c] === -1) {
+                        const moves = [];
+                        for (const v of [0, 1]) {
+                            grid[r][c] = v;
+                            if (this.isValidPartial(grid, r, c)) moves.push(v);
+                            grid[r][c] = -1;
+                        }
+                        if (moves.length === 0) return;
+                        if (!best || moves.length < bestMoves.length) { best = { r, c }; bestMoves = moves; }
+                    };
+                    if (!best) { if (this.isValidComplete(grid)) solutions.push(grid.map(r => [...r])); return; }
+                    for (const v of this.shuffle(bestMoves)) {
+                        grid[best.r][best.c] = v;
+                        solve(grid);
+                        grid[best.r][best.c] = -1;
+                    }
+                };
+                solve(puzzle.map(r => [...r]));
+                return solutions;
+            },
+            createPuzzle(solution, diff, fast = false) {
+                const size = solution.length;
+                const puzzle = solution.map(r => [...r]);
+                const target = Math.floor(size * size * State.config[diff].holes);
+                const positions = [];
+                for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) positions.push([r, c]);
+                const shuffled = this.shuffle(positions);
+                let removed = 0;
+                for (const [r, c] of shuffled) {
+                    if (removed >= target) break;
+                    const keep = puzzle[r][c];
+                    puzzle[r][c] = -1;
+                    if (fast || this.solveLimited(puzzle, 2).length === 1) removed++;
+                    else puzzle[r][c] = keep;
+                }
+                return puzzle;
+            }
+        };
+
+
+        const Icons = {
+            soundOn: '<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"></path><path d="M16 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 6a8 8 0 0 1 0 12"></path></svg>',
+            soundOff: '<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"></path><path d="M17 9l4 4"></path><path d="M21 9l-4 4"></path></svg>',
+            themes: {
+                classic: '<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h8l3 3v13H7z"></path><path d="M15 4v4h4"></path><path d="M9.5 12h5"></path><path d="M9.5 15h5"></path></svg>',
+                sakura: '<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c-3-5 2-7 2-3 3-3 6 2 1 3 5 1 2 6-1 3 0 4-6 4-3 0-4 3-7-2-2-3z"></path><circle cx="12" cy="12" r="1.4"></circle></svg>',
+                matcha: '<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13c6-8 12-8 14-8-1 8-7 14-14 14 0-2 0-4 0-6z"></path><path d="M5 19c3-5 7-8 12-10"></path></svg>',
+                fuji: '<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18"></path><path d="M5 16l7-11 7 11"></path><path d="M9 11h6"></path><path d="M4 21c2-1 4-1 6 0s4 1 6 0 3-1 4 0"></path></svg>',
+                dark: '<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a7 7 0 1 0 11.5 11.5z"></path></svg>'
+            }
+        };
+
+        const UI = {
+            init() {
+                document.documentElement.setAttribute('data-theme', State.theme);
+                document.documentElement.lang = State.lang;
+                this.updateTopControls();
+                this.renderNumpad();
+                this.applyI18n();
+                this.selectMode(State.mode, true);
+                this.showScreen('welcomeScreen');
+                this.updateResumeButton();
+                document.addEventListener('keydown', e => Game.handleKeydown(e));
+                document.addEventListener('click', e => {
+                    const picker = document.getElementById('langPicker');
+                    if (picker && !picker.contains(e.target)) this.closeLangMenu();
+                });
+            },
+            showScreen(id) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+                if (id === 'scoresScreen') this.renderScores();
+                if (id === 'welcomeScreen') this.updateResumeButton();
+            },
+            openOverlay(id, focusSelector = 'button') {
+                State.lastFocusedElement = document.activeElement;
+                const overlay = document.getElementById(id);
+                if (!overlay) return;
+                overlay.classList.add('active');
+                const focusTarget = overlay.querySelector(focusSelector) || overlay.querySelector('button') || overlay;
+                window.setTimeout(() => focusTarget.focus({ preventScroll: true }), 0);
+            },
+            closeOverlay(id, restoreFocus = true) {
+                const overlay = document.getElementById(id);
+                if (!overlay) return;
+                overlay.classList.remove('active');
+                if (restoreFocus && State.lastFocusedElement && typeof State.lastFocusedElement.focus === 'function') {
+                    window.setTimeout(() => State.lastFocusedElement.focus({ preventScroll: true }), 0);
+                }
+            },
+            showHelp() {
+                const gameActive = document.getElementById('gameScreen').classList.contains('active');
+                State.helpWasRunning = gameActive && !State.isPaused && !State.isGameOver;
+                if (State.helpWasRunning) Game.stopTimer();
+                this.openOverlay('helpOverlay', '#helpCloseBtn');
+            },
+            closeHelp() {
+                this.closeOverlay('helpOverlay');
+                if (State.helpWasRunning) {
+                    State.helpWasRunning = false;
+                    Game.startTimer();
+                }
+            },
+            updateTopControls() {
+                document.getElementById('muteIcon').innerHTML = State.muted ? Icons.soundOff : Icons.soundOn;
+                document.getElementById('themeIcon').innerHTML = Icons.themes[State.theme] || Icons.themes.classic;
+                this.updateLanguagePicker();
+            },
+            updateLanguagePicker() {
+                const flag = document.getElementById('currentLangFlag');
+                const button = document.getElementById('langButton');
+                if (flag) flag.className = 'lang-flag ' + State.lang;
+                if (button) button.setAttribute('aria-label', t('ariaLang'));
+                document.querySelectorAll('.lang-option').forEach(btn => {
+                    const selected = btn.dataset.lang === State.lang;
+                    btn.classList.toggle('selected', selected);
+                    btn.setAttribute('aria-checked', selected ? 'true' : 'false');
+                });
+            },
+            toggleLangMenu(event) {
+                if (event) event.stopPropagation();
+                const picker = document.getElementById('langPicker');
+                const button = document.getElementById('langButton');
+                const open = !picker.classList.contains('open');
+                picker.classList.toggle('open', open);
+                button.setAttribute('aria-expanded', open ? 'true' : 'false');
+            },
+            closeLangMenu() {
+                const picker = document.getElementById('langPicker');
+                const button = document.getElementById('langButton');
+                if (!picker || !button) return;
+                picker.classList.remove('open');
+                button.setAttribute('aria-expanded', 'false');
+            },
+            applyI18n() {
+                document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+                document.querySelectorAll('[data-i18n-tooltip]').forEach(el => { el.dataset.tooltip = t(el.dataset.i18nTooltip); });
+                document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
+                document.getElementById('modeDescription').textContent = t('desc' + State.mode[0].toUpperCase() + State.mode.slice(1));
+                document.getElementById('mainActionBtn').textContent = State.mode === 'print' ? t('printBtn') : t('start');
+                this.updateModeIndicator();
+                this.updateHints();
+                this.updateTopControls();
+                this.updateResumeButton();
+            },
+            changeLanguage(lang) {
+                if (!I18n[lang]) return;
+                State.lang = lang;
+                Storage.set('binairoLang', lang);
+                document.documentElement.lang = lang;
+                this.applyI18n();
+                this.closeLangMenu();
+            },
+            toggleMute() {
+                State.muted = !State.muted;
+                Storage.set('binairoMuted', State.muted);
+                this.updateTopControls();
+            },
+            toggleTheme() {
+                const index = State.themes.indexOf(State.theme);
+                State.theme = State.themes[(index + 1) % State.themes.length];
+                Storage.set('binairoTheme', State.theme);
+                document.documentElement.setAttribute('data-theme', State.theme);
+                this.updateTopControls();
+            },
+            selectMode(mode, silent = false) {
+                State.mode = mode;
+                document.querySelectorAll('.btn-mode').forEach(btn => btn.classList.toggle('selected', btn.dataset.mode === mode));
+                document.getElementById('modeDescription').textContent = t('desc' + mode[0].toUpperCase() + mode.slice(1));
+                document.getElementById('mainActionBtn').textContent = mode === 'print' ? t('printBtn') : t('start');
+                if (!silent && mode === 'print') this.showScreen('printScreen');
+            },
+            selectDifficulty(diff) {
+                State.diff = diff;
+                document.querySelectorAll('.btn-difficulty').forEach(btn => btn.classList.toggle('selected', btn.dataset.diff === diff));
+            },
+            selectPrintDifficulty(diff) {
+                State.printDiff = diff;
+                document.querySelectorAll('.btn-print-diff').forEach(btn => btn.classList.toggle('selected', btn.dataset.diff === diff));
+            },
+            renderNumpad() {
+                const pad = document.getElementById('numpad');
+                pad.innerHTML = '';
+                [0, 1, 'del'].forEach(item => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = item === 'del' ? 'num-btn clear-num-btn' : 'num-btn';
+                    if (item === 'del') {
+                        btn.setAttribute('aria-label', t('clear'));
+                        btn.title = t('clear');
+                        btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 15.5 13.5 6a2.1 2.1 0 0 1 3 0l1.5 1.5a2.1 2.1 0 0 1 0 3L9 19.5H4v-4Z"></path><path d="M10.5 9 15 13.5"></path><path d="M8 19.5h12"></path></svg>';
+                    } else {
+                        btn.textContent = item;
+                    }
+                    btn.onclick = () => item === 'del' ? Game.clearCell() : Game.placeValue(item);
+                    pad.appendChild(btn);
+                });
+            },
+            updateModeIndicator() {
+                const el = document.getElementById('modeIndicator');
+                if (el) el.textContent = `${t(State.mode).toUpperCase()} - ${t(State.diff).toUpperCase()} ${State.config[State.diff].size}x${State.config[State.diff].size}`;
+            },
+            updateHints() {
+                const span = document.getElementById('hintsLeft');
+                const btn = document.getElementById('hintBtn');
+                if (!span || !btn) return;
+                span.textContent = State.mode === 'zen' ? '∞' : State.hints;
+                btn.disabled = State.mode !== 'zen' && State.hints <= 0;
+            },
+            updateLives(animateLoss = false) {
+                const el = document.getElementById('livesDisplay');
+                if (!el) return;
+                if (State.mode === 'zen') { el.textContent = ''; return; }
+                const max = State.config[State.diff].lives;
+                if (animateLoss && el.children[State.lives]) {
+                    const heart = el.children[State.lives];
+                    heart.classList.add('animating-loss');
+                    setTimeout(() => this.updateLives(false), 600);
+                    return;
+                }
+                el.innerHTML = '';
+                for (let i = 0; i < max; i++) {
+                    const heart = document.createElement('span');
+                    heart.className = 'heart' + (i >= State.lives ? ' used' : '');
+                    heart.textContent = '♥';
+                    el.appendChild(heart);
+                }
+            },
+            formatTime(seconds) {
+                return `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
+            },
+            closeQuitConfirm() { this.closeOverlay('quitOverlay'); if (State.quitWasRunning) { State.quitWasRunning = false; Game.startTimer(); } },
+            closeGameOver() { this.closeOverlay('gameOverOverlay', false); this.showScreen('welcomeScreen'); },
+            closeVictory() { this.closeOverlay('victoryOverlay', false); this.showScreen('welcomeScreen'); },
+            createConfetti() {
+                const colors = ['#f4c842', '#e57373', '#64b5f6', '#81c784', '#ba68c8'];
+                for (let i = 0; i < 90; i++) {
+                    const c = document.createElement('div');
+                    c.className = 'confetti';
+                    c.style.left = Math.random() * 100 + 'vw';
+                    c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    c.style.animationDelay = Math.random() + 's';
+                    document.body.appendChild(c);
+                    setTimeout(() => c.remove(), 4200);
+                }
+            },
+
+            updateResumeButton() {
+                const btn = document.getElementById('resumeGameBtn');
+                if (!btn) return;
+                const saved = Storage.getJSON('binairoCurrentGame', null);
+                const canResume = !!(saved && saved.grid && saved.solution && saved.status && saved.mode !== 'print');
+                btn.style.display = canResume ? 'inline-flex' : 'none';
+            },
+            renderScores() {
+                const list = document.getElementById('scoresList');
+                const scores = Storage.getJSON('binairoScores', {});
+                const rows = [];
+                ['arcade', 'chrono'].forEach(mode => ['easy', 'medium', 'hard', 'expert'].forEach(diff => rows.push({ mode, diff, key: `${mode}-${diff}` })));
+                list.innerHTML = rows.map(r => `<div class="score-row"><span>${t(r.mode)} - ${t(r.diff)} ${State.config[r.diff].size}x${State.config[r.diff].size}</span><strong>${scores[r.key] ? this.formatTime(scores[r.key]) : '---'}</strong></div>`).join('') || `<p>${t('noScores')}</p>`;
+            },
+            showScores() { this.showScreen('scoresScreen'); },
+            clearScores() { Storage.remove('binairoScores'); this.renderScores(); },
+            async executePrint() {
+                const btn = document.getElementById('printActionBtn');
+                const label = btn.querySelector('[data-i18n="printBtn"]') || btn;
+                const old = label.textContent;
+                label.textContent = t('generating');
+                btn.disabled = true;
+                try {
+                    await this.generatePrint();
+                    window.print();
+                } finally {
+                    label.textContent = old;
+                    btn.disabled = false;
+                }
+            },
+            async generatePrint() {
+                const container = document.getElementById('printGridsContainer');
+                const pages = parseInt(document.getElementById('printPageCount').value, 10) || 1;
+                const diff = State.printDiff;
+                const size = State.config[diff].size;
+                container.innerHTML = '';
+                for (let p = 0; p < pages; p++) {
+                    const page = document.createElement('div');
+                    page.className = 'print-page';
+                    const grids = document.createElement('div');
+                    grids.className = 'print-grids';
+                    for (let i = 0; i < 6; i++) {
+                        const sol = Engine.generateSolution(size);
+                        const puzzle = Engine.createPuzzle(sol, diff, true);
+                        const item = document.createElement('div');
+                        item.className = 'print-grid-item';
+                        const title = document.createElement('div');
+                        title.className = 'print-grid-title';
+                        title.textContent = `BINAIRO ${p * 6 + i + 1} - ${size}x${size}`;
+                        const gridEl = document.createElement('div');
+                        gridEl.className = 'print-binairo-grid';
+                        gridEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+                        for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) {
+                            const cell = document.createElement('div');
+                            cell.className = 'print-cell';
+                            if (c === size / 2 - 1) cell.classList.add('middle-right');
+                            if (r === size / 2 - 1) cell.classList.add('middle-bottom');
+                            cell.textContent = puzzle[r][c] === -1 ? '' : puzzle[r][c];
+                            gridEl.appendChild(cell);
+                        }
+                        item.append(title, gridEl);
+                        grids.appendChild(item);
+                    }
+                    page.appendChild(grids);
+                    container.appendChild(page);
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                }
+            }
+        };
+
+        const Game = {
+            getElapsedTime() {
+                return State.mode === 'chrono' ? State.chronoLimit - State.timer : State.timer;
+            },
+            saveCurrentGame() {
+                if (State.isGameOver || !State.grid.length || State.mode === 'print') {
+                    Storage.remove('binairoCurrentGame');
+                    UI.updateResumeButton();
+                    return;
+                }
+                Storage.setJSON('binairoCurrentGame', {
+                    mode: State.mode,
+                    diff: State.diff,
+                    grid: State.grid,
+                    solution: State.solution,
+                    status: State.status,
+                    selectedCell: State.selectedCell,
+                    timer: State.timer,
+                    chronoLimit: State.chronoLimit,
+                    lives: Number.isFinite(State.lives) ? State.lives : 'Infinity',
+                    hints: Number.isFinite(State.hints) ? State.hints : 'Infinity',
+                    errorsMade: State.errorsMade,
+                    hintsUsed: State.hintsUsed,
+                    savedAt: Date.now()
+                });
+                UI.updateResumeButton();
+            },
+            clearSavedGame() {
+                Storage.remove('binairoCurrentGame');
+                UI.updateResumeButton();
+            },
+            resumeGame() {
+                const saved = Storage.getJSON('binairoCurrentGame', null);
+                if (!saved || !saved.grid || !saved.solution || !saved.status) return;
+                this.stopTimer();
+                State.mode = saved.mode || 'arcade';
+                State.diff = saved.diff || 'easy';
+                State.grid = saved.grid;
+                State.solution = saved.solution;
+                State.status = saved.status;
+                State.selectedCell = saved.selectedCell || null;
+                State.timer = Number(saved.timer) || 0;
+                State.chronoLimit = Number(saved.chronoLimit) || State.config[State.diff].time;
+                State.lives = saved.lives === 'Infinity' ? Infinity : Number(saved.lives);
+                State.hints = saved.hints === 'Infinity' ? Infinity : Number(saved.hints);
+                State.errorsMade = Number(saved.errorsMade) || 0;
+                State.hintsUsed = Number(saved.hintsUsed) || 0;
+                State.isGameOver = false;
+                State.isPaused = false;
+                UI.selectMode(State.mode, true);
+                UI.selectDifficulty(State.diff);
+                UI.showScreen('gameScreen');
+                UI.updateModeIndicator();
+                UI.updateLives();
+                UI.updateHints();
+                this.renderGrid();
+                this.updateTimer();
+                if (State.selectedCell) this.selectCell(State.selectedCell.r, State.selectedCell.c);
+                else this.selectFirstCell();
+                this.startTimer();
+            },
+            start() {
+                if (State.mode === 'print') { UI.showScreen('printScreen'); return; }
+                this.stopTimer();
+                State.isGameOver = false;
+                State.isPaused = false;
+                State.timer = State.mode === 'chrono' ? State.config[State.diff].time : 0;
+                State.chronoLimit = State.config[State.diff].time;
+                State.lives = State.mode === 'zen' ? Infinity : State.config[State.diff].lives;
+                State.hints = State.mode === 'zen' ? Infinity : State.config[State.diff].hints;
+                State.errorsMade = 0;
+                State.hintsUsed = 0;
+                const size = State.config[State.diff].size;
+                State.solution = Engine.generateSolution(size);
+                State.grid = Engine.createPuzzle(State.solution, State.diff);
+                State.status = State.grid.map(row => row.map(v => v === -1 ? 0 : 1));
+                UI.showScreen('gameScreen');
+                UI.updateModeIndicator();
+                UI.updateLives();
+                UI.updateHints();
+                this.renderGrid();
+                this.updateTimer();
+                this.startTimer();
+                this.selectFirstCell();
+                this.saveCurrentGame();
+            },
+            renderGrid() {
+                const size = State.grid.length;
+                const gridEl = document.getElementById('binairoGrid');
+                gridEl.innerHTML = '';
+                gridEl.style.setProperty('--size', size);
+                gridEl.setAttribute('role', 'grid');
+                gridEl.setAttribute('aria-label', 'Binairo');
+                State.cells = Array(size).fill(null).map(() => []);
+                State.selectedCell = null;
+                for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    if (c === size / 2 - 1) cell.classList.add('middle-right');
+                    if (r === size / 2 - 1) cell.classList.add('middle-bottom');
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    cell.setAttribute('role', 'gridcell');
+                    cell.setAttribute('aria-label', `Ligne ${r + 1}, colonne ${c + 1}`);
+                    cell.tabIndex = -1;
+                    cell.onclick = () => this.selectCell(r, c);
+                    State.cells[r][c] = cell;
+                    gridEl.appendChild(cell);
+                    this.updateCell(r, c);
+                }
+            },
+            updateCell(r, c) {
+                const cell = State.cells[r][c];
+                const base = ['cell'];
+                const size = State.grid.length;
+                if (c === size / 2 - 1) base.push('middle-right');
+                if (r === size / 2 - 1) base.push('middle-bottom');
+                if (State.selectedCell && State.selectedCell.r === r && State.selectedCell.c === c) base.push('selected');
+                cell.className = base.join(' ');
+                const val = State.grid[r][c];
+                cell.textContent = val === -1 ? '' : val;
+                const labelValue = val === -1 ? 'vide' : val;
+                cell.setAttribute('aria-label', `Ligne ${r + 1}, colonne ${c + 1}, ${labelValue}`);
+                if (State.status[r][c] === 1) cell.classList.add('fixed');
+                if (State.status[r][c] === 2) cell.classList.add('validated');
+                if (State.status[r][c] === 3) cell.classList.add('revealed');
+            },
+            selectCell(r, c) {
+                const size = State.grid.length;
+                for (let row = 0; row < size; row++) for (let col = 0; col < size; col++) {
+                    State.cells[row][col].classList.remove('selected', 'highlight', 'same-number');
+                    State.cells[row][col].tabIndex = -1;
+                }
+                State.selectedCell = { r, c };
+                const cell = State.cells[r][c];
+                cell.classList.add('selected');
+                cell.tabIndex = 0;
+                cell.focus({ preventScroll: true });
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                cell.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 500);
+                for (let i = 0; i < size; i++) {
+                    State.cells[r][i].classList.add('highlight');
+                    State.cells[i][c].classList.add('highlight');
+                }
+                const selected = State.grid[r][c];
+                if (selected !== -1) {
+                    for (let row = 0; row < size; row++) for (let col = 0; col < size; col++) if (State.grid[row][col] === selected && (row !== r || col !== c)) State.cells[row][col].classList.add('same-number');
+                }
+            },
+            selectFirstCell() {
+                for (let r = 0; r < State.grid.length; r++) for (let c = 0; c < State.grid.length; c++) if (State.status[r][c] !== 1) { this.selectCell(r, c); return; }
+                this.selectCell(0, 0);
+            },
+            placeValue(value) {
+                if (State.isGameOver || !State.selectedCell) return;
+                Sound.init();
+                const { r, c } = State.selectedCell;
+                if (State.status[r][c] === 1 || State.status[r][c] === 3) { Sound.play('error'); return; }
+                const cell = State.cells[r][c];
+                if (value !== State.solution[r][c]) {
+                    cell.textContent = value;
+                    cell.classList.add('error');
+                    cell.classList.add('shake');
+                    Sound.play('error');
+                    State.errorsMade++;
+                    setTimeout(() => { this.updateCell(r, c); this.selectCell(r, c); }, 450);
+                    if (State.mode !== 'zen') {
+                        State.lives--;
+                        UI.updateLives(true);
+                        if (State.lives <= 0) this.end(false, t('outLives'));
+                        else this.saveCurrentGame();
+                    }
+                    return;
+                }
+                State.grid[r][c] = value;
+                State.status[r][c] = 2;
+                this.updateCell(r, c);
+                State.cells[r][c].classList.add('validated-anim');
+                Sound.play('write');
+                this.selectCell(r, c);
+                this.checkGroups();
+                if (this.isSolved()) this.end(true);
+                else this.saveCurrentGame();
+            },
+            clearCell() {
+                if (!State.selectedCell) return;
+                const { r, c } = State.selectedCell;
+                if (State.status[r][c] === 1 || State.status[r][c] === 3) return;
+                State.grid[r][c] = -1;
+                State.status[r][c] = 0;
+                this.updateCell(r, c);
+                this.selectCell(r, c);
+                Sound.play('write');
+                this.saveCurrentGame();
+            },
+            useHint() {
+                if (State.mode !== 'zen' && State.hints <= 0) return;
+                let target = State.selectedCell && State.status[State.selectedCell.r][State.selectedCell.c] !== 1 && State.grid[State.selectedCell.r][State.selectedCell.c] === -1 ? State.selectedCell : null;
+                if (!target) {
+                    const empty = [];
+                    for (let r = 0; r < State.grid.length; r++) for (let c = 0; c < State.grid.length; c++) if (State.grid[r][c] === -1) empty.push({ r, c });
+                    if (!empty.length) return;
+                    target = empty[Math.floor(Math.random() * empty.length)];
+                }
+                State.grid[target.r][target.c] = State.solution[target.r][target.c];
+                State.status[target.r][target.c] = 3;
+                State.hintsUsed++;
+                if (State.mode !== 'zen') State.hints--;
+                if (State.mode === 'arcade') State.timer += 30;
+                if (State.mode === 'chrono') State.timer = Math.max(0, State.timer - 30);
+                this.updateCell(target.r, target.c);
+                this.selectCell(target.r, target.c);
+                UI.updateHints();
+                this.updateTimer();
+                Sound.play('bell');
+                if (State.mode === 'chrono' && State.timer <= 0) this.end(false, t('timeUp'));
+                if (this.isSolved()) this.end(true);
+                else this.saveCurrentGame();
+            },
+            checkGroups() {
+                const size = State.grid.length;
+                for (let r = 0; r < size; r++) if (!State.grid[r].includes(-1) && Engine.isValidLine(State.grid[r])) this.animateGroup([...Array(size).keys()].map(c => [r, c]));
+                for (let c = 0; c < size; c++) {
+                    const col = State.grid.map(row => row[c]);
+                    if (!col.includes(-1) && Engine.isValidLine(col)) this.animateGroup([...Array(size).keys()].map(r => [r, c]));
+                }
+            },
+            animateGroup(coords) {
+                coords.forEach(([r, c], i) => setTimeout(() => {
+                    State.cells[r][c].classList.add('group-anim');
+                    setTimeout(() => State.cells[r][c].classList.remove('group-anim'), 650);
+                }, i * 25));
+            },
+            isSolved() {
+                for (let r = 0; r < State.grid.length; r++) for (let c = 0; c < State.grid.length; c++) if (State.grid[r][c] !== State.solution[r][c]) return false;
+                return true;
+            },
+            startTimer() { this.stopTimer(); State.interval = setInterval(() => { if (State.mode === 'chrono') { State.timer--; if (State.timer <= 0) this.end(false, t('timeUp')); } else State.timer++; this.updateTimer(); if (!State.isGameOver) this.saveCurrentGame(); }, 1000); },
+            stopTimer() { if (State.interval) clearInterval(State.interval); State.interval = null; },
+            updateTimer() {
+                document.getElementById('timerDisplay').textContent = UI.formatTime(State.timer);
+                const bar = document.getElementById('chronoBar');
+                const progress = document.getElementById('chronoProgress');
+                if (State.mode === 'chrono') { bar.style.display = 'block'; progress.style.width = Math.max(0, (State.timer / State.chronoLimit) * 100) + '%'; }
+                else bar.style.display = 'none';
+            },
+            end(victory, reason = '') {
+                if (State.isGameOver) return;
+                State.isGameOver = true;
+                this.stopTimer();
+                if (victory) {
+                    const finalTime = this.getElapsedTime();
+                    let isRecord = false;
+                    if (State.mode !== 'zen') {
+                        const key = `${State.mode}-${State.diff}`;
+                        const scores = Storage.getJSON('binairoScores', {});
+                        isRecord = !scores[key] || finalTime < scores[key];
+                        if (isRecord) { scores[key] = finalTime; Storage.setJSON('binairoScores', scores); }
+                    }
+                    document.getElementById('finalTimeDisplay').textContent = State.mode === 'zen' ? '--:--' : UI.formatTime(finalTime);
+                    document.getElementById('finalErrorsDisplay').textContent = State.errorsMade;
+                    document.getElementById('finalHintsDisplay').textContent = State.hintsUsed;
+                    document.getElementById('newRecordMsg').style.display = isRecord ? 'block' : 'none';
+                    this.clearSavedGame();
+                    UI.openOverlay('victoryOverlay', '.btn-main');
+                    UI.createConfetti();
+                    Sound.play('win');
+                } else {
+                    document.getElementById('gameOverReason').textContent = reason || t('outLives');
+                    document.getElementById('gameOverTimeDisplay').textContent = UI.formatTime(this.getElapsedTime());
+                    document.getElementById('gameOverErrorsDisplay').textContent = State.errorsMade;
+                    document.getElementById('gameOverHintsDisplay').textContent = State.hintsUsed;
+                    this.clearSavedGame();
+                    UI.openOverlay('gameOverOverlay', '.btn-main');
+                    Sound.play('error');
+                }
+            },
+            abandon() { State.quitWasRunning = !State.isPaused && !State.isGameOver; if (State.quitWasRunning) this.stopTimer(); UI.openOverlay('quitOverlay', '.btn-danger'); },
+            confirmAbandon() { State.quitWasRunning = false; UI.closeOverlay('quitOverlay', false); this.stopTimer(); this.clearSavedGame(); UI.showScreen('welcomeScreen'); },
+            togglePause() {
+                if (State.isGameOver) return;
+                State.isPaused = !State.isPaused;
+                if (State.isPaused) { UI.openOverlay('pauseOverlay', 'button'); this.stopTimer(); }
+                else { UI.closeOverlay('pauseOverlay'); this.startTimer(); }
+            },
+            handleKeydown(e) {
+                const picker = document.getElementById('langPicker');
+                if (picker && picker.classList.contains('open') && e.key === 'Escape') { e.preventDefault(); UI.closeLangMenu(); return; }
+                if (document.getElementById('helpOverlay').classList.contains('active') && e.key === 'Escape') { e.preventDefault(); UI.closeHelp(); return; }
+                if (document.getElementById('quitOverlay').classList.contains('active') && e.key === 'Escape') { e.preventDefault(); UI.closeQuitConfirm(); return; }
+                const gameActive = document.getElementById('gameScreen').classList.contains('active');
+                const blocked = document.getElementById('victoryOverlay').classList.contains('active') || document.getElementById('quitOverlay').classList.contains('active') || document.getElementById('gameOverOverlay').classList.contains('active') || document.getElementById('helpOverlay').classList.contains('active');
+                if (State.isPaused && gameActive && e.key === ' ') { e.preventDefault(); this.togglePause(); return; }
+                if (!gameActive || State.isPaused || blocked) return;
+                if (e.key === '0' || e.key === '1') { e.preventDefault(); this.placeValue(parseInt(e.key, 10)); }
+                if (e.key === 'Backspace' || e.key === 'Delete') { e.preventDefault(); this.clearCell(); }
+                if (e.key.toLowerCase() === 'h') { e.preventDefault(); this.useHint(); }
+                if (e.key === '?' || e.key.toLowerCase() === 'a') { e.preventDefault(); UI.showHelp(); }
+                if (e.key === ' ') { e.preventDefault(); this.togglePause(); }
+                if (e.key === 'Escape') { e.preventDefault(); this.abandon(); }
+                if (State.selectedCell && e.key.startsWith('Arrow')) {
+                    e.preventDefault();
+                    const size = State.grid.length;
+                    let { r, c } = State.selectedCell;
+                    if (e.key === 'ArrowUp') r = (r - 1 + size) % size;
+                    if (e.key === 'ArrowDown') r = (r + 1) % size;
+                    if (e.key === 'ArrowLeft') c = (c - 1 + size) % size;
+                    if (e.key === 'ArrowRight') c = (c + 1) % size;
+                    this.selectCell(r, c);
+                }
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => UI.init());
+    </script>
+</body>
+</html>
